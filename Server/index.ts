@@ -5,15 +5,23 @@ import { Client } from 'pg';
 
 dotenv.config();
 
-const client = new Client({
+const app = express();
+const PORT = 8080;
+
+const db = new Client({
   connectionString: process.env.PGURI
 });
 
-client
-  .connect()
+db.connect()
   .then(() => {
-    console.log('✅ Ansluten till databasen!');
+    console.log('Ansluten till databasen!');
   })
   .catch((err) => {
-    console.error('❌ Fel vid anslutning till databasen:', err);
+    console.error('Fel vid anslutning till databasen:', err);
   });
+
+app.use(cors());
+
+app.listen(PORT, () => {
+  console.log(`Redo på http://localhost:${PORT}`);
+});
