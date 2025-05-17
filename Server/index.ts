@@ -7,6 +7,7 @@ dotenv.config();
 
 const app = express();
 const PORT = 8080;
+const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
 
 const db = new Client({
   connectionString: process.env.PGURI
