@@ -31,8 +31,8 @@ router.post(
 
       const result = await pool.query(
         `INSERT INTO Customer (first_name, last_name, email, password_hash)
-         VALUES ($1, $2, $3, $4)
-         RETURNING customer_id, first_name, last_name, email, role`,
+       VALUES ($1, $2, $3, $4)
+       RETURNING customer_id, first_name, last_name, email, role`,
         [first_name, last_name, email, hashedPassword]
       );
 
@@ -63,15 +63,12 @@ router.post(
       );
 
       const user = result.rows[0];
-
-      if (!user) {
+      if (!user)
         return res.status(401).json({ message: 'Fel e-post eller lösenord.' });
-      }
 
       const isMatch = await bcrypt.compare(password, user.password_hash);
-      if (!isMatch) {
+      if (!isMatch)
         return res.status(401).json({ message: 'Fel e-post eller lösenord.' });
-      }
 
       const token = jwt.sign(
         {
