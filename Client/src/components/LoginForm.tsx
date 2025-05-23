@@ -23,7 +23,7 @@ export const LoginForm = ({ onSwitch, onSuccess }: Props) => {
       const token = response.data.token;
 
       localStorage.setItem('token', token);
-      if (onSuccess) onSuccess(); // stäng dialogen t.ex.
+      if (onSuccess) onSuccess();
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data.message || 'Fel vid inloggning.');
