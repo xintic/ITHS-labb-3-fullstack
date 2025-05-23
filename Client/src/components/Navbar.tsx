@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { LuShoppingCart } from 'react-icons/lu';
-import UserLogin from '@/components/UserLogin';
+import UserDialog from '@/components/UserDialog';
 import Search from '@/components/Search';
 
 const Navbar = () => {
@@ -17,7 +17,7 @@ const Navbar = () => {
         <Button variant="ghost">
           <LuShoppingCart />
         </Button>
-        <UserLogin />
+        <UserDialog />
       </div>
       <Separator className="my-2" />
       <div className="flex flex-row justify-center h-10 items-center space-x-4 text-m">

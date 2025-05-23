@@ -31,13 +31,25 @@ router.post(
 
       const result = await pool.query(
         `INSERT INTO Customer (first_name, last_name, email, password_hash)
-       VALUES ($1, $2, $3, $4)
-       RETURNING customer_id, first_name, last_name, email, role`,
+         VALUES ($1, $2, $3, $4)
+         RETURNING customer_id, first_name, email, role`,
         [first_name, last_name, email, hashedPassword]
       );
 
       const user = result.rows[0];
-      res.status(201).json({ message: 'Registrerad!', user });
+
+      const token = jwt.sign(
+        {
+          customer_id: user.customer_id,
+          email: user.email,
+          role: user.role,
+          first_name: user.first_name
+        },
+        process.env.JWT_SECRET as string,
+        { expiresIn: '1h' }
+      );
+
+      res.status(201).json({ message: 'Registrerad!', token });
     } catch (err: any) {
       if (err.code === '23505') {
         res
@@ -50,6 +62,29 @@ router.post(
     }
   }
 );
+
+router.put('/reset-password', async (req, res) => {
+  const { email, newPassword } = req.body;
+
+  if (!email || !newPassword)
+    return res.status(400).json({ message: 'E-post och nytt lösenord krävs.' });
+
+  try {
+    const hashed = await bcrypt.hash(newPassword, 10);
+    const result = await pool.query(
+      'UPDATE Customer SET password_hash = $1 WHERE email = $2 RETURNING email',
+      [hashed, email]
+    );
+
+    if (result.rowCount === 0)
+      return res.status(404).json({ message: 'Konto hittades inte.' });
+
+    res.status(200).json({ message: 'Lösenord uppdaterat.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Serverfel vid uppdatering.' });
+  }
+});
 
 router.post(
   '/login',
@@ -74,7 +109,8 @@ router.post(
         {
           customer_id: user.customer_id,
           email: user.email,
-          role: user.role
+          role: user.role,
+          first_name: user.first_name
         },
         process.env.JWT_SECRET as string,
         { expiresIn: '1h' }
