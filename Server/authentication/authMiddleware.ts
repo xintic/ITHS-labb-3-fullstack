@@ -1,6 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
+export interface MyJwtPayload {
+  customer_id: number;
+  email: string;
+  role: 'admin' | 'customer';
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: MyJwtPayload;
+    }
+  }
+}
+
 export const authenticateToken = (
   req: Request,
   res: Response,
@@ -11,9 +25,9 @@ export const authenticateToken = (
 
   if (!token) return res.sendStatus(401);
 
-  jwt.verify(token, process.env.JWT_SECRET as string, (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
     if (err) return res.sendStatus(403);
-    req.user = user as JwtPayload;
+    req.user = decoded as MyJwtPayload;
     next();
   });
 };
@@ -28,9 +42,3 @@ export const authorizeRole = (role: 'admin' | 'customer') => {
     next();
   };
 };
-
-interface JwtPayload {
-  customer_id: number;
-  email: string;
-  role: 'admin' | 'customer';
-}
