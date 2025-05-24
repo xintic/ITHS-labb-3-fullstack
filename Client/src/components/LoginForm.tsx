@@ -17,12 +17,8 @@ export const LoginForm = ({ onSwitch, onSuccess }: Props) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
-      const token = response.data.token;
-
-      localStorage.setItem('token', token);
+      await axios.post('/api/auth/login', { email, password }, { withCredentials: true });
       if (onSuccess) onSuccess();
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -45,7 +41,6 @@ export const LoginForm = ({ onSwitch, onSuccess }: Props) => {
           required
         />
       </div>
-
       <div className="flex flex-col space-y-2">
         <Label htmlFor="password">Lösenord</Label>
         <Input
@@ -56,19 +51,15 @@ export const LoginForm = ({ onSwitch, onSuccess }: Props) => {
           required
         />
       </div>
-
       {error && <p className="text-sm text-red-500">{error}</p>}
-
       <Button type="submit" className="w-full">
         Logga in
       </Button>
-
       <div className="text-center text-sm mt-2">
         <button type="button" onClick={() => onSwitch('reset')} className="text-blue-500 underline">
           Glömt lösenord?
         </button>
       </div>
-
       <div className="text-center text-sm">
         Inget konto?{' '}
         <button

@@ -5,7 +5,7 @@ import { RegisterForm } from '@/components/RegisterForm';
 import { ResetForm } from '@/components/ResetForm';
 import { Button } from '@/components/ui/button';
 import { LuCircleUserRound } from 'react-icons/lu';
-import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 
 type Mode = 'login' | 'register' | 'reset';
 
@@ -22,20 +22,26 @@ const UserDialog = () => {
   const [firstName, setFirstName] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
+    const fetchUser = async () => {
       try {
-        const decoded = jwtDecode<JwtPayload>(token);
-        setFirstName(decoded.first_name);
+        const res = await axios.get<JwtPayload>('/api/auth/user', {
+          withCredentials: true,
+          validateStatus: (status) => status === 200 || status === 401
+        });
+        if (res.status === 200) {
+          setFirstName(res.data.first_name);
+        } else {
+          setFirstName(null);
+        }
       } catch (err) {
-        console.error(err, 'Ogiltig token');
-        localStorage.removeItem('token');
+        console.error('Ett oväntat fel inträffade:', err);
       }
-    }
+    };
+    if (open) fetchUser();
   }, [open]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
+  const handleLogout = async () => {
+    await axios.post('/api/auth/logout', {}, { withCredentials: true });
     setFirstName(null);
     setOpen(false);
   };
@@ -46,7 +52,6 @@ const UserDialog = () => {
         <LuCircleUserRound className="mr-2" />
         {firstName ? firstName : 'Logga in'}
       </Button>
-
       <Dialog
         open={open}
         onOpenChange={(isOpen) => {
@@ -78,7 +83,6 @@ const UserDialog = () => {
                 {mode === 'register' && 'Skapa ett nytt konto genom att fylla i dina uppgifter.'}
                 {mode === 'reset' && 'Ange din e-postadress för att återställa ditt lösenord.'}
               </DialogDescription>
-
               {mode === 'login' && (
                 <LoginForm onSwitch={setMode} onSuccess={() => setOpen(false)} />
               )}

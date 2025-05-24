@@ -17,9 +17,12 @@ export const ResetForm = ({ onSwitch }: Props) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
     try {
-      await axios.put('/api/auth/reset-password', { email, newPassword });
+      await axios.put(
+        '/api/auth/reset-password',
+        { email, newPassword },
+        { withCredentials: true }
+      );
       setSuccess(true);
       setTimeout(() => onSwitch('login'), 1500);
     } catch (err: unknown) {
@@ -43,7 +46,6 @@ export const ResetForm = ({ onSwitch }: Props) => {
           required
         />
       </div>
-
       <div className="flex flex-col space-y-2">
         <Label htmlFor="newPassword">Nytt lösenord</Label>
         <Input
@@ -54,14 +56,11 @@ export const ResetForm = ({ onSwitch }: Props) => {
           required
         />
       </div>
-
-      {error && <p className="text-sm text-red-500">{error}</p>}
-      {success && <p className="text-sm text-green-600">Lösenord uppdaterat!</p>}
-
+      {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
+      {success && <p className="text-sm text-green-600 mt-2">Lösenord uppdaterat!</p>}
       <Button type="submit" className="w-full">
         Återställ lösenord
       </Button>
-
       <div className="text-center text-sm">
         <button type="button" onClick={() => onSwitch('login')} className="text-blue-500 underline">
           Tillbaka till inloggning

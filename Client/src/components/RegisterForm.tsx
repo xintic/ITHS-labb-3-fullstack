@@ -26,12 +26,8 @@ export const RegisterForm = ({ onBack, onSuccess }: Props) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
     try {
-      const response = await axios.post('/api/auth/register', formData);
-      const token = response.data.token;
-
-      localStorage.setItem('token', token);
+      await axios.post('/api/auth/register', formData, { withCredentials: true });
       if (onSuccess) onSuccess();
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -60,13 +56,10 @@ export const RegisterForm = ({ onBack, onSuccess }: Props) => {
         <Label>Lösenord</Label>
         <Input type="password" name="password" value={formData.password} onChange={handleChange} />
       </div>
-
       {error && <p className="text-red-500 text-sm">{error}</p>}
-
       <Button type="submit" className="w-full">
         Skapa konto
       </Button>
-
       <p className="text-sm text-center mt-2">
         Har du redan ett konto?{' '}
         <button type="button" onClick={() => onBack('login')} className="underline text-blue-500">
