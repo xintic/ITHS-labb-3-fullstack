@@ -43,7 +43,7 @@ export default function SearchProducts() {
   }, [query, fetchResults]);
 
   return (
-    <div className="max-w-2xl p-4">
+    <div className="max-w-xl py-4">
       <div className="flex items-center bg-amber-50 border border-gray-300 px-4 py-2 shadow-sm">
         <LuSearch className="text-xl text-black mr-2" />
         <input

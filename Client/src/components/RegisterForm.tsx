@@ -42,19 +42,41 @@ export const RegisterForm = ({ onBack, onSuccess }: Props) => {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="flex flex-col space-y-2">
         <Label>Förnamn</Label>
-        <Input name="first_name" value={formData.first_name} onChange={handleChange} />
+        <Input
+          name="first_name"
+          autoComplete="given-name"
+          value={formData.first_name}
+          onChange={handleChange}
+        />
       </div>
       <div className="flex flex-col space-y-2">
         <Label>Efternamn</Label>
-        <Input name="last_name" value={formData.last_name} onChange={handleChange} />
+        <Input
+          name="last_name"
+          autoComplete="family-name"
+          value={formData.last_name}
+          onChange={handleChange}
+        />
       </div>
       <div className="flex flex-col space-y-2">
         <Label>E-post</Label>
-        <Input type="email" name="email" value={formData.email} onChange={handleChange} />
+        <Input
+          type="email"
+          name="email"
+          autoComplete="email"
+          value={formData.email}
+          onChange={handleChange}
+        />
       </div>
       <div className="flex flex-col space-y-2">
         <Label>Lösenord</Label>
-        <Input type="password" name="password" value={formData.password} onChange={handleChange} />
+        <Input
+          type="password"
+          name="password"
+          autoComplete="new-password"
+          value={formData.password}
+          onChange={handleChange}
+        />
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}
       <Button type="submit" className="w-full">
