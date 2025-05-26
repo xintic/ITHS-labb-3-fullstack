@@ -4,7 +4,7 @@ import { LoginForm } from '@/components/LoginForm';
 import { RegisterForm } from '@/components/RegisterForm';
 import { ResetForm } from '@/components/ResetForm';
 import { Button } from '@/components/ui/button';
-import { LuCircleUserRound } from 'react-icons/lu';
+import { LuUser } from 'react-icons/lu';
 import axios from 'axios';
 
 type Mode = 'login' | 'register' | 'reset';
@@ -60,7 +60,7 @@ const UserDialog = () => {
   return (
     <>
       <Button variant="ghost" onClick={() => setOpen(true)}>
-        <LuCircleUserRound className="mr-2" />
+        <LuUser className="mr-2" />
         {firstName ? `${firstName} ${lastName ?? ''}` : 'Logga in'}
       </Button>
       <Dialog

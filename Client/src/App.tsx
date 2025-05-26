@@ -7,6 +7,7 @@ import {
 import MainLayout from './layouts/MainLayout';
 import LandingPage from './pages/LandingPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 
 // Hund
 import DogPage from './pages/dog/DogPage';
@@ -96,6 +97,7 @@ const router = createBrowserRouter(
         <Route path="ovriga" element={<OtherSmallAnimalsPage />} />
       </Route>
       <Route path="presentkort" element={<GiftCardsPage />} />
+      <Route path="/produkt/:slug" element={<ProductDetailPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )

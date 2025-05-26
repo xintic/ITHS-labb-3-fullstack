@@ -48,6 +48,7 @@ export default function SearchProducts() {
         <LuSearch className="text-xl text-black mr-2" />
         <input
           type="text"
+          name="search"
           placeholder="Sök bland produkter"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
