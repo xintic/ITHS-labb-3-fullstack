@@ -9,7 +9,6 @@ import LandingPage from './pages/LandingPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 
-// Hund
 import DogPage from './pages/dog/DogPage';
 import DogFoodPage from './pages/dog/DogFoodPage';
 import DogFeedingAreaPage from './pages/dog/DogFeedingAreaPage';
@@ -25,7 +24,6 @@ import DogTrainingPage from './pages/dog/DogTrainingPage';
 import DogAccessoriesPage from './pages/dog/DogAccessoriesPage';
 import ForPetOwnersPage from './pages/dog/ForPetOwnersPage';
 
-// Katt
 import CatPage from './pages/cat/CatPage';
 import CatFoodPage from './pages/cat/CatFoodPage';
 import CatFeedingAreaPage from './pages/cat/CatFeedingAreaPage';
@@ -41,7 +39,6 @@ import CatCratesPage from './pages/cat/CatCratesPage';
 import CatAccessoriesPage from './pages/cat/CatAccessoriesPage';
 import CatScratchingFurniturePage from './pages/cat/CatScratchingFurniturePage';
 
-// Smådjur
 import SmallAnimalsPage from './pages/small-animals/SmallAnimalsPage';
 import RabbitPage from './pages/small-animals/RabbitPage';
 import GuineaPigPage from './pages/small-animals/GuineaPigPage';
