@@ -13,9 +13,15 @@ router.get('/', async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
       `
-      SELECT DISTINCT p.*, c.name AS category_name
+      SELECT 
+        p.product_id,
+        p.name,
+        p.slug,
+        p.price,
+        p.image_url,
+        c.name AS category_name
       FROM product p
-      LEFT JOIN category c ON p.category_id = c.category_id
+      JOIN category c ON p.category_id = c.category_id
       LEFT JOIN categoryproduct cp ON p.product_id = cp.product_id
       LEFT JOIN category c2 ON cp.category_id = c2.category_id
       LEFT JOIN productattributevalue pav ON p.product_id = pav.product_id
@@ -25,6 +31,7 @@ router.get('/', async (req: Request, res: Response) => {
         c.name ILIKE $1 OR
         c2.name ILIKE $1 OR
         av.value ILIKE $1
+      GROUP BY p.product_id, c.name
       `,
       [`%${query}%`]
     );

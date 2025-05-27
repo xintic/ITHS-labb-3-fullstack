@@ -1,8 +1,7 @@
 import logo from '@/assets/petly-logo.svg';
 import { NavLink } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
-import { LuShoppingCart } from 'react-icons/lu';
+import Cart from '@/components/Cart';
 import UserDialog from '@/components/UserDialog';
 import Search from '@/components/Search';
 
@@ -15,11 +14,11 @@ const Navbar = () => {
             <img src={logo} alt="Petly logga" />
           </NavLink>
         </div>
-        <div className="flex flex-row items-center w-full max-w-2xl ml-auto">
-          <Button variant="ghost">
-            <LuShoppingCart />
-          </Button>
-          <UserDialog />
+        <div className="flex flex-row items-center w-full max-w-3xl ml-auto">
+          <div className="mr-2">
+            <Cart />
+            <UserDialog />
+          </div>
           <div className="flex-1">
             <Search />
           </div>

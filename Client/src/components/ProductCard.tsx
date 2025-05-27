@@ -16,7 +16,7 @@ type Props = {
 
 const ProductCard = ({ name, slug, price, imageUrl, averageRating, isFavorite }: Props) => {
   return (
-    <Card className="w-full max-w-[280px] shadow-md">
+    <Card className="w-full max-w-s shadow-md">
       <Link to={`/produkt/${slug}`} aria-label={`Visa ${name}`}>
         <CardHeader className="flex justify-center">
           <img

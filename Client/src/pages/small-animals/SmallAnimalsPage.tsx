@@ -2,7 +2,7 @@ import { Link, Outlet } from 'react-router-dom';
 
 const SmallAnimalsPage = () => {
   return (
-    <div className="p-4">
+    <div className="text-center">
       <h1 className="text-xl font-bold">Allt inom Smådjur</h1>
       <nav className="mt-2 space-x-4">
         <Link to="kanin" className="text-blue-500 underline">

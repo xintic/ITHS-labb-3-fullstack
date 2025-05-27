@@ -8,6 +8,7 @@ import MainLayout from './layouts/MainLayout';
 import LandingPage from './pages/LandingPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProductDetailPage from './pages/ProductDetailPage';
+import SearchResultsPage from './pages/SearchResultsPage';
 
 import DogPage from './pages/dog/DogPage';
 import DogFoodPage from './pages/dog/DogFoodPage';
@@ -95,6 +96,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path="presentkort" element={<GiftCardsPage />} />
       <Route path="/produkt/:slug" element={<ProductDetailPage />} />
+      <Route path="/sok" element={<SearchResultsPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
