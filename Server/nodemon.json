@@ -1,0 +1,6 @@
+{
+  "watch": ["authentication", "routes", "index.ts", "db.ts"],
+  "ext": "ts",
+  "ignore": ["node_modules"],
+  "exec": "ts-node index.ts"
+}

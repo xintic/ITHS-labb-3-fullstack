@@ -4,8 +4,51 @@ import { authenticateToken } from '../authentication/authMiddleware';
 
 const router = Router();
 
+router.put('/user', authenticateToken, async (req: Request, res: Response) => {
+  const {
+    first_name,
+    last_name,
+    phone,
+    address,
+    care_of,
+    postal_code,
+    city,
+    door_code
+  } = req.body;
+
+  try {
+    await pool.query(
+      `UPDATE customer
+         SET first_name = $1,
+             last_name = $2,
+             phone = $3,
+             address = $4,
+             care_of = $5,
+             postal_code = $6,
+             city = $7,
+             door_code = $8
+         WHERE customer_id = $9`,
+      [
+        first_name,
+        last_name,
+        phone,
+        address,
+        care_of,
+        postal_code,
+        city,
+        door_code,
+        req.user!.customer_id
+      ]
+    );
+    res.status(200).json({ message: 'Profilen uppdaterad.' });
+  } catch (err) {
+    console.error('Fel vid uppdatering av användare:', err);
+    res.status(500).json({ message: 'Serverfel' });
+  }
+});
+
 router.get(
-  '/me/favorites',
+  '/user/favorites',
   authenticateToken,
   async (req: Request, res: Response) => {
     try {
@@ -25,7 +68,7 @@ router.get(
 );
 
 router.post(
-  '/me/favorites/:id',
+  '/user/favorites/:id',
   authenticateToken,
   async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -45,7 +88,7 @@ router.post(
 );
 
 router.delete(
-  '/me/favorites/:id',
+  '/user/favorites/:id',
   authenticateToken,
   async (req: Request, res: Response) => {
     const { id } = req.params;

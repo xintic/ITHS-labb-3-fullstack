@@ -1,11 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem
+} from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { LoginForm } from '@/components/LoginForm';
 import { RegisterForm } from '@/components/RegisterForm';
 import { ResetForm } from '@/components/ResetForm';
 import { Button } from '@/components/ui/button';
 import { LuUser } from 'react-icons/lu';
-import axios from 'axios';
 
 type Mode = 'login' | 'register' | 'reset';
 
@@ -22,6 +29,7 @@ const UserDialog = () => {
   const [mode, setMode] = useState<Mode>('login');
   const [firstName, setFirstName] = useState<string | null>(null);
   const [lastName, setLastName] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const fetchUser = useCallback(async () => {
     try {
@@ -42,8 +50,13 @@ const UserDialog = () => {
   }, []);
 
   useEffect(() => {
-    if (open) fetchUser();
-  }, [open, fetchUser]);
+    fetchUser();
+    const handleUpdate = () => fetchUser();
+    window.addEventListener('user-updated', handleUpdate);
+    return () => {
+      window.removeEventListener('user-updated', handleUpdate);
+    };
+  }, [fetchUser]);
 
   const handleLoginSuccess = async () => {
     await fetchUser();
@@ -54,38 +67,37 @@ const UserDialog = () => {
     await axios.post('/api/auth/logout', {}, { withCredentials: true });
     setFirstName(null);
     setLastName(null);
-    setOpen(false);
   };
 
   return (
     <>
-      <Button variant="ghost" onClick={() => setOpen(true)}>
-        <LuUser className="mr-2" />
-        {firstName ? `${firstName} ${lastName ?? ''}` : 'Logga in'}
-      </Button>
-      <Dialog
-        open={open}
-        onOpenChange={(isOpen) => {
-          setOpen(isOpen);
-          if (!isOpen && !firstName) {
-            setMode('login');
-          }
-        }}
-      >
-        <DialogContent>
-          {firstName ? (
-            <div className="space-y-4 text-center">
-              <p>
-                <strong>
-                  {firstName} {lastName}
-                </strong>
-              </p>
-              <Button variant="outline" onClick={handleLogout}>
-                Logga ut
-              </Button>
-            </div>
-          ) : (
-            <>
+      {firstName ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" aria-label="Användarmenyn">
+              <LuUser className="mr-2" />
+              {firstName} {lastName}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => navigate('/anvandare')}>Mina sidor</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>Logga ut</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : (
+        <>
+          <Button variant="ghost" onClick={() => setOpen(true)}>
+            <LuUser className="mr-2" />
+            Logga in
+          </Button>
+          <Dialog
+            open={open}
+            onOpenChange={(isOpen) => {
+              setOpen(isOpen);
+              if (!isOpen) setMode('login');
+            }}
+          >
+            <DialogContent>
               <DialogTitle>
                 {mode === 'login' && 'Logga in'}
                 {mode === 'register' && 'Registrera konto'}
@@ -102,10 +114,10 @@ const UserDialog = () => {
                 <RegisterForm onBack={setMode} onSuccess={handleLoginSuccess} />
               )}
               {mode === 'reset' && <ResetForm onSwitch={setMode} />}
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+            </DialogContent>
+          </Dialog>
+        </>
+      )}
     </>
   );
 };

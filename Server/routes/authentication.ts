@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import pool from '../db';
+import { authenticateToken } from '../authentication/authMiddleware';
 
 const router = Router();
 
@@ -86,16 +87,63 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.get('/user', (req: Request, res: Response) => {
-  const token = req.cookies.token;
-  if (!token) return res.status(401).json({ message: 'Ingen token.' });
+router.get('/user', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-    res.json(decoded);
-  } catch {
-    res.status(403).json({ message: 'Ogiltig token.' });
+    const result = await pool.query(
+      `SELECT customer_id, email, role, first_name, last_name, phone, address, care_of, postal_code, city, door_code
+       FROM customer
+       WHERE customer_id = $1`,
+      [req.user!.customer_id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Användare hittades inte.' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Fel vid hämtning av användare:', err);
+    res.status(500).json({ message: 'Serverfel.' });
   }
 });
+
+router.put(
+  '/refresh-token',
+  authenticateToken,
+  async (req: Request, res: Response) => {
+    try {
+      const result = await pool.query(
+        `SELECT customer_id, email, role, first_name, last_name
+       FROM customer
+       WHERE customer_id = $1`,
+        [req.user!.customer_id]
+      );
+
+      const user = result.rows[0];
+
+      if (!user) {
+        return res.status(404).json({ message: 'Användare hittades inte.' });
+      }
+
+      const newToken = jwt.sign(user, process.env.JWT_SECRET as string, {
+        expiresIn: '1h'
+      });
+
+      res.cookie('token', newToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 60 * 1000
+      });
+
+      res.status(200).json({ message: 'Token uppdaterad.' });
+    } catch (err) {
+      console.error('Fel vid tokenuppdatering:', err);
+      res.status(500).json({ message: 'Serverfel.' });
+    }
+  }
+);
 
 router.post('/logout', (_req, res) => {
   res.clearCookie('token', { path: '/' });
