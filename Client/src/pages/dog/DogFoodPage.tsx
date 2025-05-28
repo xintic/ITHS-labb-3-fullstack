@@ -27,6 +27,7 @@ const DogFoodPage = () => {
       {products.map((product) => (
         <ProductCard
           key={product.product_id}
+          productId={product.product_id}
           name={product.name}
           slug={product.slug}
           price={product.price}

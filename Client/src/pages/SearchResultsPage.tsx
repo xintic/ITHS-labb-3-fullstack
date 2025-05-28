@@ -6,11 +6,11 @@ import ProductCard from '@/components/ProductCard';
 type Product = {
   product_id: number;
   name: string;
+  slug: string;
   price: number;
   image_url: string;
   average_rating: number;
   is_favorite: boolean;
-  slug: string;
 };
 
 const SearchResultsPage = () => {
@@ -38,10 +38,11 @@ const SearchResultsPage = () => {
       ) : products.length === 0 ? (
         <p>Inga produkter hittades.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="mx-auto p-4 grid gap-y-10 gap-x-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center max-w-screen-xl">
           {products.map((product) => (
             <ProductCard
               key={product.product_id}
+              productId={product.product_id}
               name={product.name}
               slug={product.slug}
               price={product.price}

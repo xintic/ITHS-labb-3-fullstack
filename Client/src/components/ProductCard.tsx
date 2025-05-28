@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { FaStar } from 'react-icons/fa';
 import { FaRegHeart, FaHeart } from 'react-icons/fa';
+import { useCartStore } from '@/stores/cartStore';
 
 type Props = {
+  productId: number;
   name: string;
   slug: string;
   price: number;
@@ -14,7 +16,21 @@ type Props = {
   isFavorite: boolean;
 };
 
-const ProductCard = ({ name, slug, price, imageUrl, averageRating, isFavorite }: Props) => {
+const ProductCard = ({
+  productId,
+  name,
+  slug,
+  price,
+  imageUrl,
+  averageRating,
+  isFavorite
+}: Props) => {
+  const addItem = useCartStore((state) => state.addItem);
+
+  const handleAddToCart = () => {
+    addItem({ productId, name, price, quantity: 1 });
+  };
+
   return (
     <Card className="w-full max-w-s shadow-md">
       <Link to={`/produkt/${slug}`} aria-label={`Visa ${name}`}>
@@ -39,12 +55,14 @@ const ProductCard = ({ name, slug, price, imageUrl, averageRating, isFavorite }:
               {isFavorite ? <FaHeart className="text-red-500" /> : <FaRegHeart />}
             </div>
           </div>
-          <p className="text-sm font-semibold">{name}</p>
+          <p className="text-sm text-start font-semibold">{name}</p>
           <p className="text-lg font-bold">{price} kr</p>
         </CardContent>
       </Link>
       <CardFooter>
-        <Button className="w-full">Köp nu</Button>
+        <Button className="w-full cursor-pointer" onClick={handleAddToCart}>
+          Köp nu
+        </Button>
       </CardFooter>
     </Card>
   );
