@@ -72,7 +72,7 @@ export default function Search() {
   };
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-xl py-4">
+    <div ref={containerRef} className="relative w-full py-4">
       <div className="flex items-center bg-amber-50 border border-gray-300 px-4 py-2 shadow-sm rounded">
         <LuSearch className="text-xl text-black mr-2" />
         <input

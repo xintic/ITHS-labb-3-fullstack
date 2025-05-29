@@ -16,13 +16,13 @@ import { LuMenu } from 'react-icons/lu';
 const Navbar = () => {
   return (
     <nav className="flex flex-col px-4 md:px-8 lg:px-16 xl:px-32 h-45">
-      <div className="flex flex-row justify-between items-center h-20">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-row items-center h-20">
+        <div className="flex items-center">
           <NavLink to="/">
             <img src={logo} alt="Petly logga" />
           </NavLink>
         </div>
-        <div className="md:hidden">
+        <div className="md:hidden ml-auto">
           <Sheet>
             <SheetTrigger asChild>
               <div className="cursor-pointer h-10 w-10 flex items-center justify-center">
@@ -31,14 +31,14 @@ const Navbar = () => {
             </SheetTrigger>
             <SheetContent side="right" className="w-[350px]" aria-describedby={undefined}>
               <SheetTitle className="p-4.5 text-xl">Meny</SheetTitle>
-              <div className="flex flex-col w-full gap-2 mb-4">
+              <div className="gap-2 mb-4">
                 <Cart />
                 <UserDialog />
               </div>
-              <div className="mb-4">
+              <div className="mb-4 px-2">
                 <Search />
               </div>
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion type="single" collapsible className="px-2">
                 <AccordionItem value="hund">
                   <AccordionTrigger>Allt inom Hund</AccordionTrigger>
                   <AccordionContent className="flex flex-col space-y-2 pl-4">
@@ -91,12 +91,14 @@ const Navbar = () => {
             </SheetContent>
           </Sheet>
         </div>
-        <div className="hidden md:flex flex-row items-center w-full max-w-3xl ml-auto">
-          <div className="mr-2">
+        <div className="hidden md:flex flex-row items-center justify-end gap-2 ml-auto">
+          <div className="flex-shrink-0">
             <Cart />
+          </div>
+          <div className="flex-shrink-0">
             <UserDialog />
           </div>
-          <div className="flex-1">
+          <div className="w-[30rem]">
             <Search />
           </div>
         </div>

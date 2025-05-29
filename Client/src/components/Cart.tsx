@@ -26,7 +26,7 @@ const Cart = () => {
         {items.length === 0 ? (
           <p className="text-sm text-muted-foreground">Din varukorg är tom.</p>
         ) : (
-          <div className="space-y-3 max-h-64 overflow-y-auto">
+          <div className="space-y-3 max-h-128 overflow-y-auto">
             {items.map((item) => (
               <div key={item.productId} className="flex justify-between items-center border-b pb-2">
                 <div>
@@ -45,7 +45,7 @@ const Cart = () => {
                 </Button>
               </div>
             ))}
-            <div className="pt-2 border-t">
+            <div className="pt-2">
               <p className="font-bold">Totalt: {total} kr</p>
             </div>
             <div className="flex justify-between pt-2">
