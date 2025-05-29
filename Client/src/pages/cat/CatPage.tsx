@@ -3,8 +3,8 @@ import { Link, Outlet } from 'react-router-dom';
 const DogPage = () => {
   return (
     <div className="text-center">
-      <h1 className="text-xl font-bold">Allt inom Katt</h1>
-      <nav className="mt-2 space-x-4">
+      <h1 className="text-xl font-bold hidden md:block">Allt inom Katt</h1>
+      <nav className="mt-2 space-x-4 hidden md:block">
         <Link to="kattmat" className="text-blue-500 underline">
           Kattmat
         </Link>
@@ -39,7 +39,7 @@ const DogPage = () => {
           Kattburar
         </Link>
         <Link to="tillbehor" className="text-blue-500 underline">
-          Katttillbehör
+          Kattillbehör
         </Link>
         <Link to="klosmobler" className="text-blue-500 underline">
           Klösmöbler
