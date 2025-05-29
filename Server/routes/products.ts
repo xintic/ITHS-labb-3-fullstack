@@ -190,4 +190,20 @@ router.delete(
   }
 );
 
+router.get('/:slug', async (req, res) => {
+  const { slug } = req.params;
+  try {
+    const result = await pool.query('SELECT * FROM product WHERE slug = $1', [
+      slug
+    ]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Produkt hittades inte.' });
+    }
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Fel vid hämtning av produkt med slug:', slug, error);
+    res.status(500).json({ message: 'Serverfel.' });
+  }
+});
+
 export default router;
