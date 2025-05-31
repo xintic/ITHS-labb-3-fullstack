@@ -7,9 +7,8 @@ import {
 import MainLayout from './layouts/MainLayout';
 import LandingPage from './pages/LandingPage';
 import NotFoundPage from './pages/NotFoundPage';
-import ProductDetailPage from './pages/ProductDetailPage';
-import SearchResultsPage from './pages/SearchResultsPage';
 import UserPage from './pages/UserPage';
+import AdminPanelPage from './pages/AdminPanelPage';
 
 import DogPage from './pages/dog/DogPage';
 import DogFoodPage from './pages/dog/DogFoodPage';
@@ -50,6 +49,8 @@ import AquariumFishPage from './pages/small-animals/AquariumFishPage';
 import ReptilePage from './pages/small-animals/ReptilePage';
 import OtherSmallAnimalsPage from './pages/small-animals/OtherSmallAnimalsPage';
 
+import ProductDetailPage from './pages/ProductDetailPage';
+import SearchResultsPage from './pages/SearchResultsPage';
 import GiftCardsPage from './pages/GiftCardsPage';
 
 const router = createBrowserRouter(
@@ -99,6 +100,7 @@ const router = createBrowserRouter(
       <Route path="/produkt/:slug" element={<ProductDetailPage />} />
       <Route path="/sok" element={<SearchResultsPage />} />
       <Route path="/anvandare" element={<UserPage />} />
+      <Route path="/admin/hantera-produkt" element={<AdminPanelPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
