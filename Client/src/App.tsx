@@ -9,6 +9,7 @@ import LandingPage from './pages/LandingPage';
 import NotFoundPage from './pages/NotFoundPage';
 import UserPage from './pages/UserPage';
 import AdminPanelPage from './pages/AdminPanelPage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 import DogPage from './pages/dog/DogPage';
 import DogFoodPage from './pages/dog/DogFoodPage';
@@ -99,8 +100,12 @@ const router = createBrowserRouter(
       <Route path="presentkort" element={<GiftCardsPage />} />
       <Route path="/produkt/:slug" element={<ProductDetailPage />} />
       <Route path="/sok" element={<SearchResultsPage />} />
-      <Route path="/anvandare" element={<UserPage />} />
-      <Route path="/admin/hantera-produkt" element={<AdminPanelPage />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/anvandare" element={<UserPage />} />
+      </Route>
+      <Route element={<ProtectedRoute role="admin" />}>
+        <Route path="/admin/hantera-produkt" element={<AdminPanelPage />} />
+      </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
