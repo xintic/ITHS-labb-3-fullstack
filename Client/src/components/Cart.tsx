@@ -3,10 +3,17 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { LuShoppingCart } from 'react-icons/lu';
 import { FaTrash } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { getTransformedImageUrl } from '@/utils/cloudinary';
 
 const Cart = () => {
   const { items, removeItem, clearCart } = useCartStore();
   const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    navigate('/varukorg');
+  };
 
   return (
     <Popover>
@@ -20,7 +27,7 @@ const Cart = () => {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80">
+      <PopoverContent className="w-80 sm:w-96 md:w-100">
         <h3 className="text-lg font-semibold mb-2">Din kundvagn</h3>
 
         {items.length === 0 ? (
@@ -28,9 +35,14 @@ const Cart = () => {
         ) : (
           <div className="space-y-3 max-h-128 overflow-y-auto">
             {items.map((item) => (
-              <div key={item.productId} className="flex justify-between items-center border-b pb-2">
-                <div>
-                  <p className="font-semibold">{item.name}</p>
+              <div key={item.productId} className="flex items-start gap-3 border-b pb-3">
+                <img
+                  src={getTransformedImageUrl(item.imageUrl, 'w_100,h_100,c_fill')}
+                  alt={item.name}
+                  className="w-20 h-20 object-cover rounded"
+                />
+                <div className="flex flex-col flex-1">
+                  <p className="font-semibold leading-tight">{item.name}</p>
                   <p className="text-sm text-gray-500">
                     {item.quantity} × {item.price} kr
                   </p>
@@ -52,7 +64,9 @@ const Cart = () => {
               <Button variant="outline" onClick={clearCart}>
                 Töm kundvagn
               </Button>
-              <Button variant="default">Gå till kassan</Button>
+              <Button variant="default" onClick={handleCheckout}>
+                Gå till kassan
+              </Button>
             </div>
           </div>
         )}

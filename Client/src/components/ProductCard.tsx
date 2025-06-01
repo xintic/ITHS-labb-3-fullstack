@@ -28,7 +28,7 @@ const ProductCard = ({
   const addItem = useCartStore((state) => state.addItem);
 
   const handleAddToCart = () => {
-    addItem({ productId, name, price, quantity: 1 });
+    addItem({ productId, name, price, imageUrl, quantity: 1 });
   };
 
   return (

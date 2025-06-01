@@ -53,6 +53,7 @@ import OtherSmallAnimalsPage from './pages/small-animals/OtherSmallAnimalsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import GiftCardsPage from './pages/GiftCardsPage';
+import CheckoutPage from './pages/CheckoutPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -106,6 +107,7 @@ const router = createBrowserRouter(
       <Route element={<ProtectedRoute role="admin" />}>
         <Route path="/admin/hantera-produkt" element={<AdminPanelPage />} />
       </Route>
+      <Route path="varukorg" element={<CheckoutPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
