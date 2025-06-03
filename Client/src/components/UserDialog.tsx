@@ -29,6 +29,7 @@ const UserDialog = () => {
   const [mode, setMode] = useState<Mode>('login');
   const [firstName, setFirstName] = useState<string | null>(null);
   const [lastName, setLastName] = useState<string | null>(null);
+  const [role, setRole] = useState<'admin' | 'customer' | null>(null);
   const navigate = useNavigate();
 
   const fetchUser = useCallback(async () => {
@@ -40,9 +41,11 @@ const UserDialog = () => {
       if (res.status === 200) {
         setFirstName(res.data.first_name);
         setLastName(res.data.last_name);
+        setRole(res.data.role);
       } else {
         setFirstName(null);
         setLastName(null);
+        setRole(null);
       }
     } catch (err) {
       console.error('Ett oväntat fel inträffade:', err);
@@ -67,6 +70,7 @@ const UserDialog = () => {
     await axios.post('/api/auth/logout', {}, { withCredentials: true });
     setFirstName(null);
     setLastName(null);
+    setRole(null);
   };
 
   return (
@@ -80,6 +84,11 @@ const UserDialog = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            {role === 'admin' && (
+              <DropdownMenuItem onClick={() => navigate('/admin/hantera-produkt')}>
+                Adminpanel
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem onClick={() => navigate('/anvandare')}>Mina sidor</DropdownMenuItem>
             <DropdownMenuItem onClick={handleLogout}>Logga ut</DropdownMenuItem>
           </DropdownMenuContent>
