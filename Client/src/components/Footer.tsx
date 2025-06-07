@@ -31,14 +31,14 @@ const Footer = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label htmlFor="email" className="text-sm font-medium text-gray-900">
+            <label htmlFor="newsletter" className="text-sm font-medium text-gray-900">
               Prenumerera på nyheter
             </label>
             <div className="flex gap-2">
               <Input
-                id="email"
+                id="newsletter"
                 placeholder="Din e-post"
-                className="bg-gray-100 border border-gray-300"
+                className="bg-amber-50 border border-gray-300"
               />
               <Button>Prenumerera</Button>
             </div>

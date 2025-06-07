@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import ProductCard from '@/components/ProductCard';
+import ProductFilter from '@/components/ProductFilter';
 
 type Product = {
   product_id: number;
@@ -15,19 +16,34 @@ type Product = {
 
 const DogPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<number[]>([]);
   const location = useLocation();
+
+  const fetchProducts = async (filters: number[] = []) => {
+    try {
+      const res =
+        filters.length > 0
+          ? await axios.post(
+              '/api/products/by-parent-category/1/filtered',
+              { value_ids: filters },
+              { withCredentials: true }
+            )
+          : await axios.get('/api/products/by-parent-category/1', { withCredentials: true });
+
+      setProducts(res.data);
+    } catch (err) {
+      console.error('Kunde inte hämta produkter', err);
+    }
+  };
 
   useEffect(() => {
     if (location.pathname === '/hund') {
-      axios
-        .get('/api/products/by-parent-category/1', { withCredentials: true })
-        .then((res) => setProducts(res.data))
-        .catch((err) => console.error('Kunde inte hämta produkter', err));
+      fetchProducts(selectedFilters);
     }
-  }, [location.pathname]);
+  }, [location.pathname, selectedFilters]);
 
   return (
-    <div className="px-4 md:px-8 lg:px-16 xl:px-32">
+    <div className="px-4 md:px-8 lg:px-16 xl:px-32 text-center">
       <h1 className="text-xl font-bold hidden md:block mt-6">Allt inom Hund</h1>
       <nav className="mt-4 mb-8 space-x-4 hidden md:block">
         <Link to="hundmat" className="text-blue-500 underline">
@@ -70,21 +86,33 @@ const DogPage = () => {
           För Husse & Matte
         </Link>
       </nav>
+
       <Outlet />
+
       {location.pathname === '/hund' && (
-        <div className="grid gap-y-10 gap-x-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center max-w-screen-xl mx-auto">
-          {products.map((product) => (
-            <ProductCard
-              key={product.product_id}
-              productId={product.product_id}
-              name={product.name}
-              slug={product.slug}
-              price={product.price}
-              imageUrl={product.image_url}
-              averageRating={product.average_rating}
-              isFavorite={product.is_favorite}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 max-w-screen-xl mx-auto">
+          <div className="lg:col-span-1 text-left">
+            <ProductFilter
+              categoryId={1}
+              selectedValues={selectedFilters}
+              onChange={setSelectedFilters}
             />
-          ))}
+          </div>
+
+          <div className="lg:col-span-3 grid gap-y-10 gap-x-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-items-center">
+            {products.map((product) => (
+              <ProductCard
+                key={product.product_id}
+                productId={product.product_id}
+                name={product.name}
+                slug={product.slug}
+                price={product.price}
+                imageUrl={product.image_url}
+                averageRating={product.average_rating}
+                isFavorite={product.is_favorite}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>

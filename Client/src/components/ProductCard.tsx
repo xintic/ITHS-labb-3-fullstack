@@ -60,7 +60,7 @@ const ProductCard = ({
         </CardContent>
       </Link>
       <CardFooter>
-        <Button className="w-full cursor-pointer" onClick={handleAddToCart}>
+        <Button variant="secondary" className="w-full cursor-pointer" onClick={handleAddToCart}>
           Köp nu
         </Button>
       </CardFooter>
