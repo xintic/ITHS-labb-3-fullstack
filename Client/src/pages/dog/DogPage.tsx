@@ -90,7 +90,7 @@ const DogPage = () => {
       <Outlet />
 
       {location.pathname === '/hund' && (
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 max-w-screen-xl mx-auto">
+        <div className="p-4 grid grid-cols-1 lg:grid-cols-4 gap-6 max-w-screen-xl mx-auto">
           <div className="lg:col-span-1 text-left">
             <ProductFilter
               categoryId={1}

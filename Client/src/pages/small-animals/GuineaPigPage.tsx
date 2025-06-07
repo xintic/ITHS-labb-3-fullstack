@@ -42,7 +42,7 @@ const GuineaPigPage = () => {
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 max-w-screen-xl mx-auto p-4">
       <div className="lg:col-span-1 text-left">
         <ProductFilter
-          categoryId={2}
+          categoryId={31}
           selectedValues={selectedFilters}
           onChange={setSelectedFilters}
         />
