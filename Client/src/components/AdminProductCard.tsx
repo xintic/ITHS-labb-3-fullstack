@@ -29,7 +29,7 @@ const AdminProductCard = ({
         />
       </CardHeader>
       <CardContent className="space-y-2">
-        <h3 className="text-lg font-bold truncate" title={name}>
+        <h3 className="text-lg font-bold" title={name}>
           {name}
         </h3>
         <p className="text-sm text-gray-500">Lager: {stock}</p>

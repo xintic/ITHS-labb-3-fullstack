@@ -211,7 +211,7 @@ export default function AdminPanelPage() {
   if (!isAdmin) return <Navigate to="/" replace />;
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="px-4 py-4 md:px-8 lg:px-16 xl:px-32">
       <h1 className="text-2xl font-bold mb-4">Adminpanel</h1>
       <div className="mb-10">
         <h2 className="text-xl font-semibold mb-3">Alla ordrar</h2>
@@ -365,7 +365,7 @@ export default function AdminPanelPage() {
       </form>
 
       <h2 className="text-xl font-semibold mb-2">Existerande produkter</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {products.map((p) => (
           <AdminProductCard
             key={p.product_id}
