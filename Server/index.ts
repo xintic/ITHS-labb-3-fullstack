@@ -12,18 +12,20 @@ import customerRoutes from './routes/customers';
 import reviewRoutes from './routes/reviews';
 import orderRoutes from './routes/orders';
 import attributeRoutes from './routes/attributes';
+import path from 'path';
 
 dotenv.config();
 
 const app = express();
 const PORT = 8080;
 
-app.use(
-  cors({
-    origin: 'http://localhost:5173',
-    credentials: true
-  })
-);
+// app.use(
+//   cors({
+//     origin: 'http://localhost:5173',
+//     credentials: true
+//   })
+// );
+app.use(express.static(path.join(path.resolve(), 'dist')));
 app.use(cookieParser());
 app.use(express.json());
 
