@@ -21,6 +21,14 @@ interface Props {
   onChange: (selected: number[]) => void;
 }
 
+const priceRanges = [
+  { label: '1–100 kr', min: 1, max: 100 },
+  { label: '100–250 kr', min: 100, max: 250 },
+  { label: '250–500 kr', min: 250, max: 500 },
+  { label: '500–1000 kr', min: 500, max: 1000 },
+  { label: '1000+ kr', min: 1001, max: Infinity }
+];
+
 const ProductFilter = ({ categoryId, selectedValues, onChange }: Props) => {
   const [attributes, setAttributes] = useState<Record<string, AttributeValue[]>>({});
 
@@ -62,6 +70,21 @@ const ProductFilter = ({ categoryId, selectedValues, onChange }: Props) => {
       </div>
 
       <Accordion type="multiple">
+        <AccordionItem value="price">
+          <AccordionTrigger className="text-sm font-medium">Pris</AccordionTrigger>
+          <AccordionContent className="space-y-2 mt-2">
+            {priceRanges.map((range) => (
+              <label key={range.label} className="flex items-center space-x-2 text-sm">
+                <Checkbox
+                  checked={selectedValues.includes(-range.min)}
+                  onCheckedChange={() => toggleValue(-range.min)}
+                />
+                <span>{range.label}</span>
+              </label>
+            ))}
+          </AccordionContent>
+        </AccordionItem>
+
         {Object.entries(attributes).map(([attribute, values]) => (
           <AccordionItem key={attribute} value={attribute}>
             <AccordionTrigger className="text-sm font-medium">{attribute}</AccordionTrigger>

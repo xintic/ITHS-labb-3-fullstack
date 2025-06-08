@@ -164,30 +164,48 @@ router.post(
       }
     }
 
+    const priceConditions = [
+      { id: -1, condition: 'p.price < 100' },
+      { id: -100, condition: 'p.price >= 100 AND p.price < 250' },
+      { id: -250, condition: 'p.price >= 250 AND p.price < 500' },
+      { id: -500, condition: 'p.price >= 500 AND p.price < 1000' },
+      { id: -1000, condition: 'p.price >= 1000' }
+    ];
+
+    const regularValues = value_ids.filter((id: number) => id > 0);
+    const priceFilters = priceConditions.filter((pc) =>
+      value_ids.includes(pc.id)
+    );
+
+    const priceSQL = priceFilters.map((pf) => `(${pf.condition})`).join(' OR ');
+
     try {
       const result = await pool.query(
         `
-      SELECT 
-        p.product_id,
-        p.name,
-        p.price,
-        p.image_url,
-        p.slug,
-        COALESCE(AVG(r.rating), 0)::numeric(2,1) AS average_rating,
-        CASE 
-          WHEN $2::int IS NOT NULL AND cp.customer_id IS NOT NULL THEN true
-          ELSE false
-        END AS is_favorite
-      FROM product p
-      JOIN category c ON p.category_id = c.category_id
-      LEFT JOIN review r ON p.product_id = r.product_id
-      LEFT JOIN customerproduct cp ON p.product_id = cp.product_id AND cp.customer_id = $2
-      JOIN productattributevalue pav ON pav.product_id = p.product_id
-      WHERE (c.parent_id = $1 OR c.category_id = $1)
-        AND pav.value_id = ANY($3)
-      GROUP BY p.product_id, cp.customer_id
-      `,
-        [parentId, userId, value_ids]
+        SELECT 
+          p.product_id,
+          p.name,
+          p.price,
+          p.image_url,
+          p.slug,
+          COALESCE(AVG(r.rating), 0)::numeric(2,1) AS average_rating,
+          CASE 
+            WHEN $2::int IS NOT NULL AND cp.customer_id IS NOT NULL THEN true
+            ELSE false
+          END AS is_favorite
+        FROM product p
+        JOIN category c ON p.category_id = c.category_id
+        LEFT JOIN review r ON p.product_id = r.product_id
+        LEFT JOIN customerproduct cp ON p.product_id = cp.product_id AND cp.customer_id = $2
+        LEFT JOIN productattributevalue pav ON pav.product_id = p.product_id
+        WHERE (c.parent_id = $1 OR c.category_id = $1)
+        ${regularValues.length > 0 ? `AND pav.value_id = ANY($3)` : ''}
+        ${priceFilters.length > 0 ? `AND (${priceSQL})` : ''}
+        GROUP BY p.product_id, cp.customer_id
+        `,
+        regularValues.length > 0
+          ? [parentId, userId, regularValues]
+          : [parentId, userId]
       );
 
       res.json(result.rows);

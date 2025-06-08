@@ -70,7 +70,7 @@ const SmallAnimalsPage = () => {
       </nav>
       <Outlet />
       {location.pathname === '/smadjur' && (
-        <div className="p-4 grid grid-cols-1 lg:grid-cols-4 gap-6 max-w-screen-xl mx-auto">
+        <div className="p-4 grid grid-cols-1 lg:grid-cols-4 gap-6 mx-auto">
           <div className="lg:col-span-1 text-left">
             <ProductFilter
               categoryId={29}
@@ -79,7 +79,7 @@ const SmallAnimalsPage = () => {
             />
           </div>
 
-          <div className="lg:col-span-3 grid gap-y-10 gap-x-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-items-center">
+          <div className="lg:col-span-3 grid gap-y-10 gap-x-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center">
             {products.map((product) => (
               <ProductCard
                 key={product.product_id}
