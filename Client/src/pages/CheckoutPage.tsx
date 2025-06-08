@@ -15,6 +15,18 @@ import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+type FieldName = 'cardName' | 'cardNumber' | 'expiry' | 'cvv' | 'swishNumber' | 'email' | 'zip';
+
+const fieldPlaceholders: Record<FieldName, string> = {
+  cardName: 'Förnamn Efternamn',
+  cardNumber: 'XXXX XXXX XXXX XXXX',
+  expiry: 'MM/ÅÅ',
+  cvv: '3 siffror',
+  swishNumber: '0701234567',
+  email: 'din@mail.se',
+  zip: '123 45'
+};
+
 const paymentIcons = {
   card: '/icons/card.webp',
   swish: '/icons/swish.webp',
@@ -69,8 +81,19 @@ const CheckoutPage = () => {
     'budbee' | 'best' | 'airmee' | 'postnord_ombud' | 'postnord_home'
   >('postnord_ombud');
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'swish' | 'invoice'>('card');
-  const navigate = useNavigate();
 
+  const [formData, setFormData] = useState<Record<FieldName, string>>({
+    cardName: '',
+    cardNumber: '',
+    expiry: '',
+    cvv: '',
+    swishNumber: '',
+    email: '',
+    zip: ''
+  });
+  const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({});
+
+  const navigate = useNavigate();
   const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const isCartEmpty = cartItems.length === 0;
 
@@ -82,7 +105,45 @@ const CheckoutPage = () => {
     }
   }, [cartItems, openSection]);
 
+  const handleInputChange = (field: FieldName, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    validateField(field, value);
+  };
+
+  const validateField = (field: FieldName, value: string) => {
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      if (!value.trim()) {
+        newErrors[field] = 'Fältet är obligatoriskt';
+      } else {
+        delete newErrors[field];
+      }
+      return newErrors;
+    });
+  };
+
+  const validateAll = () => {
+    const fieldsToCheck: FieldName[] =
+      paymentMethod === 'card'
+        ? ['cardName', 'cardNumber', 'expiry', 'cvv']
+        : paymentMethod === 'swish'
+          ? ['swishNumber']
+          : ['email', 'zip'];
+    let valid = true;
+    const newErrors: Partial<Record<FieldName, string>> = {};
+    for (const field of fieldsToCheck) {
+      const value = formData[field];
+      if (!value.trim()) {
+        newErrors[field] = 'Fältet är obligatoriskt';
+        valid = false;
+      }
+    }
+    setErrors((prev) => ({ ...prev, ...newErrors }));
+    return valid;
+  };
+
   const handleCheckout = async () => {
+    if (!validateAll()) return;
     try {
       const payload = {
         items: cartItems.map((item) => ({
@@ -93,7 +154,6 @@ const CheckoutPage = () => {
         shipping_method: shippingMethod,
         payment_method: paymentMethod
       };
-
       const res = await axios.post('/api/orders', payload, { withCredentials: true });
       const orderId = res.data.order_id;
       clearCart();
@@ -136,7 +196,6 @@ const CheckoutPage = () => {
                     <p className="font-semibold">{item.quantity * item.price} kr</p>
                   </div>
                 ))}
-
                 <div className="text-right font-bold text-lg">Totalt: {total} kr</div>
                 <div className="flex justify-end mt-4">
                   <Button onClick={() => goTo('shipping')} disabled={cartItems.length === 0}>
@@ -172,7 +231,6 @@ const CheckoutPage = () => {
               const isHomeDelivery = ['budbee', 'best', 'airmee', 'postnord_home'].includes(
                 option.key
               );
-
               return (
                 <div key={option.key} className="border rounded-md p-4 space-y-2">
                   <label className="flex justify-between items-center cursor-pointer">
@@ -202,7 +260,6 @@ const CheckoutPage = () => {
                       <span>{displayPrice === 0 ? '0 kr' : `${displayPrice} kr`}</span>
                     </div>
                   </label>
-
                   {isSelected && option.key === 'postnord_ombud' && (
                     <div className="bg-green-100 rounded-md p-3 text-sm mt-2">
                       <p className="font-semibold">
@@ -215,7 +272,6 @@ const CheckoutPage = () => {
                       </Button>
                     </div>
                   )}
-
                   {isSelected && isHomeDelivery && (
                     <div className="mt-3">
                       <Label htmlFor={`code-${option.key}`} className="pb-2 block">
@@ -227,7 +283,6 @@ const CheckoutPage = () => {
                 </div>
               );
             })}
-
             <div className="flex justify-between mt-6">
               <Button variant="outline" onClick={() => goTo('cart')}>
                 Tillbaka till varukorg
@@ -275,48 +330,50 @@ const CheckoutPage = () => {
                   <div className="mt-4 space-y-4">
                     {method === 'card' && (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="cardName" className="pb-2">
-                            Kortinnehavare
-                          </Label>
-                          <Input
-                            required
-                            id="cardName"
-                            type="text"
-                            placeholder="Förnamn Efternamn"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="cardNumber" className="pb-2">
-                            Kortnummer
-                          </Label>
-                          <Input
-                            required
-                            id="cardNumber"
-                            type="text"
-                            placeholder="XXXX XXXX XXXX XXXX"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="expiry" className="pb-2">
-                            Utgångsdatum
-                          </Label>
-                          <Input required id="expiry" type="text" placeholder="MM/ÅÅ" />
-                        </div>
-                        <div>
-                          <Label htmlFor="cvv" className="pb-2">
-                            CVC / CVV
-                          </Label>
-                          <Input required id="cvv" type="text" placeholder="3 siffror" />
-                        </div>
+                        {(['cardName', 'cardNumber', 'expiry', 'cvv'] as FieldName[]).map(
+                          (field) => (
+                            <div key={field}>
+                              <Label htmlFor={field} className="pb-2 capitalize">
+                                {field === 'cardName'
+                                  ? 'Kortinnehavare'
+                                  : field === 'cardNumber'
+                                    ? 'Kortnummer'
+                                    : field === 'expiry'
+                                      ? 'Utgångsdatum'
+                                      : 'CVC / CVV'}
+                              </Label>
+                              <Input
+                                id={field}
+                                type="text"
+                                placeholder={fieldPlaceholders[field]}
+                                value={formData[field]}
+                                onChange={(e) => handleInputChange(field, e.target.value)}
+                                autoComplete="off"
+                              />
+                              {errors[field] && (
+                                <p className="text-sm text-red-600 mt-1">{errors[field]}</p>
+                              )}
+                            </div>
+                          )
+                        )}
                       </div>
                     )}
                     {method === 'swish' && (
                       <div>
-                        <Label htmlFor="swishNumber" className="pb-2">
+                        <Label htmlFor="swishNumber" className="pb-2 block">
                           Mobilnummer
                         </Label>
-                        <Input required id="swishNumber" type="tel" placeholder="0701234567" />
+                        <Input
+                          id="swishNumber"
+                          type="tel"
+                          placeholder={fieldPlaceholders['swishNumber']}
+                          value={formData.swishNumber}
+                          onChange={(e) => handleInputChange('swishNumber', e.target.value)}
+                          autoComplete="off"
+                        />
+                        {errors.swishNumber && (
+                          <p className="text-sm text-red-600 mt-1">{errors.swishNumber}</p>
+                        )}
                       </div>
                     )}
                     {method === 'invoice' && (
@@ -353,16 +410,33 @@ const CheckoutPage = () => {
                         </div>
                         <div>
                           <Label htmlFor="email" className="pb-2 block">
-                            Mejladress
+                            Mailadress
                           </Label>
-                          <Input required id="email" type="email" placeholder="din@mail.se" />
+                          <Input
+                            id="email"
+                            type="email"
+                            placeholder={fieldPlaceholders['email']}
+                            value={formData.email}
+                            onChange={(e) => handleInputChange('email', e.target.value)}
+                            autoComplete="off"
+                          />
+                          {errors.email && (
+                            <p className="text-sm text-red-600 mt-1">{errors.email}</p>
+                          )}
                         </div>
-
                         <div>
                           <Label htmlFor="zip" className="pb-2 block">
                             Postnummer
                           </Label>
-                          <Input required id="zip" type="text" placeholder="123 45" />
+                          <Input
+                            id="zip"
+                            type="text"
+                            placeholder={fieldPlaceholders['zip']}
+                            value={formData.zip}
+                            onChange={(e) => handleInputChange('zip', e.target.value)}
+                            autoComplete="off"
+                          />
+                          {errors.zip && <p className="text-sm text-red-600 mt-1">{errors.zip}</p>}
                         </div>
                       </div>
                     )}
