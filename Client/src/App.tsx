@@ -54,6 +54,7 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import GiftCardsPage from './pages/GiftCardsPage';
 import CheckoutPage from './pages/CheckoutPage';
+import ConfirmationPage from './pages/ConfirmationPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -108,6 +109,7 @@ const router = createBrowserRouter(
         <Route path="/admin/hantera-produkt" element={<AdminPanelPage />} />
       </Route>
       <Route path="varukorg" element={<CheckoutPage />} />
+      <Route path="/order/:orderId" element={<ConfirmationPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )

@@ -12,6 +12,8 @@ import {
 } from '@/components/ui/select';
 import { getTransformedImageUrl } from '@/utils/cloudinary';
 import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const paymentIcons = {
   card: '/icons/card.webp',
@@ -61,12 +63,13 @@ const shippingOptions = [
 ] as const;
 
 const CheckoutPage = () => {
-  const { items: cartItems } = useCartStore();
+  const { items: cartItems, clearCart } = useCartStore();
   const [openSection, setOpenSection] = useState<'cart' | 'shipping' | 'payment'>('cart');
   const [shippingMethod, setShippingMethod] = useState<
     'budbee' | 'best' | 'airmee' | 'postnord_ombud' | 'postnord_home'
   >('postnord_ombud');
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'swish' | 'invoice'>('card');
+  const navigate = useNavigate();
 
   const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const isCartEmpty = cartItems.length === 0;
@@ -78,6 +81,28 @@ const CheckoutPage = () => {
       setOpenSection('cart');
     }
   }, [cartItems, openSection]);
+
+  const handleCheckout = async () => {
+    try {
+      const payload = {
+        items: cartItems.map((item) => ({
+          product_id: item.productId,
+          quantity: item.quantity,
+          unit_price: item.price
+        })),
+        shipping_method: shippingMethod,
+        payment_method: paymentMethod
+      };
+
+      const res = await axios.post('/api/orders', payload, { withCredentials: true });
+      const orderId = res.data.order_id;
+      clearCart();
+      navigate(`/order/${orderId}`, { replace: true });
+    } catch (error) {
+      console.error('Fel vid slutför köp:', error);
+      alert('Något gick fel. Försök igen senare.');
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
@@ -339,7 +364,9 @@ const CheckoutPage = () => {
               <Button variant="outline" onClick={() => goTo('shipping')}>
                 Tillbaka till leverans
               </Button>
-              <Button disabled={!paymentMethod}>Slutför köp</Button>
+              <Button onClick={handleCheckout} disabled={!paymentMethod}>
+                Slutför köp
+              </Button>
             </div>
           </div>
         )}

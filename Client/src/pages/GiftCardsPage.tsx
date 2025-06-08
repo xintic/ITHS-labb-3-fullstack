@@ -23,7 +23,7 @@ const GiftCardsPage = () => {
   }, []);
 
   return (
-    <div className="mx-auto p-4 grid gap-y-10 gap-x-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center max-w-screen-xl">
+    <div className="mx-auto p-4 grid gap-y-10 gap-x-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center">
       {products.map((product) => (
         <ProductCard
           key={product.product_id}
