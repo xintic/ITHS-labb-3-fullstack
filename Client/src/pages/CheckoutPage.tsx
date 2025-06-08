@@ -279,25 +279,35 @@ const CheckoutPage = () => {
                           <Label htmlFor="cardName" className="pb-2">
                             Kortinnehavare
                           </Label>
-                          <Input id="cardName" type="text" placeholder="Förnamn Efternamn" />
+                          <Input
+                            required
+                            id="cardName"
+                            type="text"
+                            placeholder="Förnamn Efternamn"
+                          />
                         </div>
                         <div>
                           <Label htmlFor="cardNumber" className="pb-2">
                             Kortnummer
                           </Label>
-                          <Input id="cardNumber" type="text" placeholder="XXXX XXXX XXXX XXXX" />
+                          <Input
+                            required
+                            id="cardNumber"
+                            type="text"
+                            placeholder="XXXX XXXX XXXX XXXX"
+                          />
                         </div>
                         <div>
                           <Label htmlFor="expiry" className="pb-2">
                             Utgångsdatum
                           </Label>
-                          <Input id="expiry" type="text" placeholder="MM/ÅÅ" />
+                          <Input required id="expiry" type="text" placeholder="MM/ÅÅ" />
                         </div>
                         <div>
                           <Label htmlFor="cvv" className="pb-2">
                             CVC / CVV
                           </Label>
-                          <Input id="cvv" type="text" placeholder="3 siffror" />
+                          <Input required id="cvv" type="text" placeholder="3 siffror" />
                         </div>
                       </div>
                     )}
@@ -306,7 +316,7 @@ const CheckoutPage = () => {
                         <Label htmlFor="swishNumber" className="pb-2">
                           Mobilnummer
                         </Label>
-                        <Input id="swishNumber" type="tel" placeholder="0701234567" />
+                        <Input required id="swishNumber" type="tel" placeholder="0701234567" />
                       </div>
                     )}
                     {method === 'invoice' && (
@@ -345,14 +355,14 @@ const CheckoutPage = () => {
                           <Label htmlFor="email" className="pb-2 block">
                             Mejladress
                           </Label>
-                          <Input id="email" type="email" placeholder="din@mail.se" />
+                          <Input required id="email" type="email" placeholder="din@mail.se" />
                         </div>
 
                         <div>
                           <Label htmlFor="zip" className="pb-2 block">
                             Postnummer
                           </Label>
-                          <Input id="zip" type="text" placeholder="123 45" />
+                          <Input required id="zip" type="text" placeholder="123 45" />
                         </div>
                       </div>
                     )}

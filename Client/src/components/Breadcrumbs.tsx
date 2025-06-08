@@ -60,6 +60,8 @@ export default function Breadcrumbs() {
     }
   }, [paths]);
 
+  if (paths[0] === 'order') return null;
+
   const breadcrumbs = paths.flatMap((segment, idx) => {
     const path = '/' + paths.slice(0, idx + 1).join('/');
     const isLast = idx === paths.length - 1;
