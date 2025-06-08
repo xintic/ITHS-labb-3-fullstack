@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon"
+    "server": "nodemon",
+    "build-frontend": "npm run --prefix ../Client build && rm -Rf dist && mv ../Client/dist ."
   },
   "keywords": [],
   "author": "",
