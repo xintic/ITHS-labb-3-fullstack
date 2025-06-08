@@ -109,7 +109,7 @@ router.post('/', authenticateToken, async (req: Request, res: Response) => {
       `,
       [
         req.user!.customer_id,
-        'Behandlas',
+        'Registrerad',
         uuidv4(),
         shipping_method,
         payment_method,
