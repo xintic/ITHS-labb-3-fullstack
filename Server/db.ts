@@ -4,8 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const pool = new Pool({
-  connectionString: process.env.PGURI,
-  ssl: { rejectUnauthorized: false }
+  connectionString: process.env.PGURI
 });
 
 pool.on('connect', () => {
